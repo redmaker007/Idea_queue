@@ -49,4 +49,9 @@ li:first-child .i { color: var(--accent); font-weight: 600; }
 li .t { flex: 1; min-width: 0; overflow-wrap: anywhere; white-space: pre-wrap; }
 li .len { font: 12px var(--mono); color: var(--muted); padding-top: 2px; }
 li .x { border: 0; background: none; color: var(--muted); padding: 0 4px; }
+.cloud { border-top: 1px solid var(--line); padding-top: 12px; display: flex; flex-direction: column; gap: 10px; }
+.cform { display: flex; flex-direction: column; gap: 6px; }
+.cform label { font-size: 12px; color: var(--muted); }
+.hint.ok { color: var(--accent); }
+.hint.err { color: #c0392b; }
 li.empty { color: var(--muted); font-size: 14px; padding: 16px 12px; }

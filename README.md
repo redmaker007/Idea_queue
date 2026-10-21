@@ -23,7 +23,17 @@ UI 只通过一个 `Store` 接口读写：`load()` / `save(state)`。
 | Store   | 状态   | 角色 |
 |---------|--------|------|
 | `local` | 已实现 | 浏览器 localStorage，作为本地修改器；可导入/导出 JSON |
-| `cloud` | 未实现 | 云端存档，方案待定 |
+| `cloud` | 已实现 | 私密 GitHub Gist 里的 `idea-queue.json`，作为云端存档 |
+
+### 连接云端
+
+1. GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token，只勾 `gist`
+2. 页面底部「设置」里粘贴 token，保存
+3. 点「推送 ↑」：第一次会自动建一个私密 Gist
+4. 换设备：同样填 token，点「拉取 ↓」，会自动找到那个 Gist
+
+推送 = 本地覆盖云端，拉取 = 云端覆盖本地，不做合并。有没推送的改动时，拉取要点两次确认。
+token 只存在当前浏览器的 localStorage 里，不会进仓库。Gist 的每次推送都有历史版本，误操作可以在 gist.github.com 上找回。
 
 ## 数据格式
 

@@ -6,7 +6,8 @@
   let S = (await store.load()) || Core.emptyState();
   let last = null; // 最近一次 pop：{ qid, t, i }
   const Q = () => S.qs[S.cur];
-  const commit = () => { store.save(S); render(); };
+  const cloud = Stores.cloud;
+  const commit = () => { store.save(S); cloud.config.set({ dirty: true }); render(); };
 
   function render() {
     const q = Q();
@@ -18,7 +19,7 @@
     S.qs.forEach((x, i) => {
       const b = el("button", "tab" + (i === S.cur ? " on" : ""), x.name);
       b.append(el("span", "n", x.items.length));
-      b.onclick = () => { S.cur = i; last = null; commit(); };
+      b.onclick = () => { S.cur = i; last = null; store.save(S); render(); }; // 切 tab 不算改动
       tabs.append(b);
     });
     const add = el("button", "tab ghost", "+ queue");
@@ -58,7 +59,66 @@
     const showPop = last && last.qid === q.id;
     $("popped").hidden = !showPop;
     if (showPop) $("ptxt").textContent = last.t;
+    renderCloud();
   }
+
+  // ---- 云端 ----
+  let cmsg = null; // { text, cls } 最近一次操作的结果
+  function renderCloud() {
+    const c = cloud.config.get();
+    const st = $("cstat");
+    st.className = "hint" + (cmsg ? " " + cmsg.cls : "");
+    if (cmsg) st.textContent = cmsg.text;
+    else if (!c.token) st.textContent = "云端：未连接";
+    else if (!c.lastSync) st.textContent = "云端：已连接，还没同步过";
+    else st.textContent = `上次同步 ${new Date(c.lastSync).toLocaleString()}` + (c.dirty ? " · 有未推送的改动" : "");
+    $("cpush").disabled = $("cpull").disabled = !c.token || busy;
+  }
+
+  let busy = false;
+  async function cloudOp(fn, okText) {
+    busy = true; cmsg = { text: "同步中…", cls: "" }; renderCloud();
+    try { await fn(); cmsg = { text: okText, cls: "ok" }; }
+    catch (e) { cmsg = { text: "失败：" + e.message, cls: "err" }; }
+    busy = false; render();
+    setTimeout(() => { cmsg = null; renderCloud(); }, 4000);
+  }
+
+  $("cpush").onclick = () => cloudOp(async () => {
+    await cloud.save(S);
+    cloud.config.set({ dirty: false });
+  }, "已推送到云端");
+
+  // 拉取会覆盖本地：有未推送改动时要点两次
+  let pullArm = false;
+  $("cpull").onclick = () => {
+    if (cloud.config.get().dirty && !pullArm) {
+      pullArm = true; $("cpull").textContent = "会覆盖本地改动，再点一次";
+      setTimeout(() => { pullArm = false; $("cpull").textContent = "拉取 ↓"; }, 3000);
+      return;
+    }
+    pullArm = false; $("cpull").textContent = "拉取 ↓";
+    cloudOp(async () => {
+      S = await cloud.load(); last = null;
+      await store.save(S);
+      cloud.config.set({ dirty: false });
+    }, "已从云端拉取");
+  };
+
+  $("cset").onclick = () => {
+    const f = $("cform"); f.hidden = !f.hidden;
+    const c = cloud.config.get();
+    $("ctoken").value = c.token || ""; $("cgist").value = c.gistId || "";
+  };
+  $("cform").onsubmit = e => {
+    e.preventDefault();
+    cloud.config.set({ token: $("ctoken").value.trim(), gistId: $("cgist").value.trim() || undefined });
+    $("cform").hidden = true; render();
+  };
+  $("cforget").onclick = () => {
+    cloud.config.set({ token: undefined });
+    $("ctoken").value = ""; render();
+  };
 
   function el(tag, cls, text) {
     const e = document.createElement(tag);

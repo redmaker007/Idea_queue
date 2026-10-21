@@ -37,8 +37,28 @@
 
   <ol id="list"></ol>
 
+  <section class="cloud">
+    <div class="bar">
+      <span class="hint" id="cstat">云端：未连接</span>
+      <span class="sp"></span>
+      <button id="cpush" type="button">推送 ↑</button>
+      <button id="cpull" type="button">拉取 ↓</button>
+      <button class="ghost" id="cset" type="button">设置</button>
+    </div>
+    <form id="cform" class="cform" hidden>
+      <label for="ctoken">GitHub token（只需 gist 权限，只存在这台设备）</label>
+      <input id="ctoken" type="password" autocomplete="off" placeholder="ghp_…">
+      <label for="cgist">Gist ID（留空：自动查找，找不到就第一次推送时新建）</label>
+      <input id="cgist" autocomplete="off" placeholder="可留空">
+      <div class="bar">
+        <button class="primary" type="submit">保存</button>
+        <button class="ghost" id="cforget" type="button">清除 token</button>
+      </div>
+    </form>
+  </section>
+
   <footer class="bar">
-    <span class="hint">本地存储</span>
+    <span class="hint">编辑自动存在本地</span>
     <span class="sp"></span>
     <button class="ghost" id="exp" type="button">导出 JSON</button>
     <button class="ghost" id="imp" type="button">导入 JSON</button>
