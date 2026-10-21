@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Idea Queue</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="wrap">
+  <div class="tabs" id="tabs"></div>
+
+  <div class="bar">
+    <div class="mode">
+      <button id="mQ" type="button">queue</button>
+      <button id="mPQ" type="button">PQ · max size()</button>
+    </div>
+    <span class="sp"></span>
+    <button class="ghost" id="ren" type="button">重命名</button>
+    <button class="ghost" id="del" type="button">删除此 queue</button>
+  </div>
+
+  <form id="f">
+    <input id="inp" placeholder="push 一个想法…" autocomplete="off">
+    <button class="primary" type="submit">push</button>
+  </form>
+
+  <div class="bar">
+    <button id="pop" type="button">pop</button>
+    <span class="hint" id="info"></span>
+  </div>
+
+  <div class="popped" id="popped" hidden>
+    <span class="lab">popped</span><span class="t" id="ptxt"></span>
+    <button class="ghost" id="undo" type="button">撤回</button>
+  </div>
+
+  <ol id="list"></ol>
+
+  <footer class="bar">
+    <span class="hint">本地存储</span>
+    <span class="sp"></span>
+    <button class="ghost" id="exp" type="button">导出 JSON</button>
+    <button class="ghost" id="imp" type="button">导入 JSON</button>
+    <input type="file" id="file" accept="application/json" hidden>
+  </footer>
+</main>
+
+<script src="js/core.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
