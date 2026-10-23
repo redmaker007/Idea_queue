@@ -8,44 +8,55 @@
 </head>
 <body>
 <main class="wrap">
-  <div class="tabs" id="tabs"></div>
-
-  <div class="bar">
-    <div class="mode">
-      <button id="mQ" type="button">queue</button>
-      <button id="mPQ" type="button">PQ · max size()</button>
+  <!-- 主页面 -->
+  <div id="main" class="view">
+    <div class="top">
+      <div class="tabs" id="tabs"></div>
+      <button class="ghost icon" id="goSet" type="button" aria-label="设置">⚙</button>
     </div>
-    <span class="sp"></span>
-    <button class="ghost" id="ren" type="button">重命名</button>
-    <button class="ghost" id="del" type="button">删除此 queue</button>
+
+    <div class="bar">
+      <div class="mode">
+        <button id="mQ" type="button">queue</button>
+        <button id="mPQ" type="button">PQ · max size()</button>
+      </div>
+      <span class="sp"></span>
+      <button class="ghost" id="ren" type="button">重命名</button>
+      <button class="ghost" id="del" type="button">删除此 queue</button>
+    </div>
+
+    <form id="f">
+      <input id="inp" placeholder="push 一个想法…" autocomplete="off">
+      <button class="primary" type="submit">push</button>
+    </form>
+
+    <div class="bar">
+      <button id="pop" type="button">pop</button>
+      <span class="hint" id="info"></span>
+    </div>
+
+    <div class="popped" id="popped" hidden>
+      <span class="lab">popped</span><span class="t" id="ptxt"></span>
+      <button class="ghost" id="undo" type="button">撤回</button>
+    </div>
+
+    <ol id="list"></ol>
   </div>
 
-  <form id="f">
-    <input id="inp" placeholder="push 一个想法…" autocomplete="off">
-    <button class="primary" type="submit">push</button>
-  </form>
+  <!-- 设置页 -->
+  <div id="settings" class="view" hidden>
+    <div class="top">
+      <button class="ghost" id="back" type="button">← 返回</button>
+    </div>
 
-  <div class="bar">
-    <button id="pop" type="button">pop</button>
-    <span class="hint" id="info"></span>
-  </div>
-
-  <div class="popped" id="popped" hidden>
-    <span class="lab">popped</span><span class="t" id="ptxt"></span>
-    <button class="ghost" id="undo" type="button">撤回</button>
-  </div>
-
-  <ol id="list"></ol>
-
-  <section class="cloud">
+    <h2>云端同步</h2>
     <div class="bar">
       <span class="hint" id="cstat">云端：未连接</span>
       <span class="sp"></span>
       <button id="cpush" type="button">推送 ↑</button>
       <button id="cpull" type="button">拉取 ↓</button>
-      <button class="ghost" id="cset" type="button">设置</button>
     </div>
-    <form id="cform" class="cform" hidden>
+    <form id="cform" class="cform">
       <label for="ctoken">GitHub token（只需 gist 权限，只存在这台设备）</label>
       <input id="ctoken" type="password" autocomplete="off" placeholder="ghp_…">
       <label for="cgist">Gist ID（留空：自动查找，找不到就第一次推送时新建）</label>
@@ -55,15 +66,16 @@
         <button class="ghost" id="cforget" type="button">清除 token</button>
       </div>
     </form>
-  </section>
 
-  <footer class="bar">
-    <span class="hint">编辑自动存在本地</span>
-    <span class="sp"></span>
-    <button class="ghost" id="exp" type="button">导出 JSON</button>
-    <button class="ghost" id="imp" type="button">导入 JSON</button>
-    <input type="file" id="file" accept="application/json" hidden>
-  </footer>
+    <h2>本地</h2>
+    <div class="bar">
+      <span class="hint">编辑自动存在本地</span>
+      <span class="sp"></span>
+      <button id="exp" type="button">导出 JSON</button>
+      <button id="imp" type="button">导入 JSON</button>
+      <input type="file" id="file" accept="application/json" hidden>
+    </div>
+  </div>
 </main>
 
 <script src="js/core.js"></script>

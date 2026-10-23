@@ -105,15 +105,23 @@
     }, "已从云端拉取");
   };
 
-  $("cset").onclick = () => {
-    const f = $("cform"); f.hidden = !f.hidden;
-    const c = cloud.config.get();
-    $("ctoken").value = c.token || ""; $("cgist").value = c.gistId || "";
+  // 主页 ⇄ 设置页
+  const show = page => {
+    $("main").hidden = page !== "main";
+    $("settings").hidden = page !== "settings";
+    if (page === "settings") {
+      const c = cloud.config.get();
+      $("ctoken").value = c.token || ""; $("cgist").value = c.gistId || "";
+    }
   };
+  $("goSet").onclick = () => show("settings");
+  $("back").onclick = () => show("main");
+
   $("cform").onsubmit = e => {
     e.preventDefault();
     cloud.config.set({ token: $("ctoken").value.trim(), gistId: $("cgist").value.trim() || undefined });
-    $("cform").hidden = true; render();
+    cmsg = { text: "已保存", cls: "ok" }; render();
+    setTimeout(() => { cmsg = null; renderCloud(); }, 2000);
   };
   $("cforget").onclick = () => {
     cloud.config.set({ token: undefined });
